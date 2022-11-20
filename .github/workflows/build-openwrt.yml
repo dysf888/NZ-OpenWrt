@@ -105,26 +105,21 @@ jobs:
         cd openwrt/bin/targets/*/*
         rm -rf packages
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-        echo "{status}={success}" >> $GITHUB_STATE
 
     - name: Upload firmware directory
       uses: actions/upload-artifact@main
-      if: steps.organize.state.status == 'success' && !cancelled()
       with:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
     - name: Generate release tag
       id: tag
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
         echo "{release_tag}={$(date +"%Y.%m.%d-%H%M")}" >> $GITHUB_OUTPUT
         touch release.txt
         curl `echo ${{secrets.ACTIONS_NOTIFY_BARK}} | sed "s/Message/Compile+Success/"`
-        echo "{status}={success}" >> $GITHUB_STATE
 
     - name: Upload firmware to release
-      if: steps.tag.state.status == 'success' && !cancelled()
       uses: softprops/action-gh-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
