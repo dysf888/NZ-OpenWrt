@@ -115,6 +115,7 @@ jobs:
     - name: Generate release tag
       id: tag
       run: |
+        echo "{release_tag}={$(date +"%Y.%m.%d-%H%M")}" >> $GITHUB_OUTPUT
         echo "::set-output name=status::success"
         touch release.txt
         curl `echo ${{secrets.ACTIONS_NOTIFY_BARK}} | sed "s/Message/Compile+Success/"`
