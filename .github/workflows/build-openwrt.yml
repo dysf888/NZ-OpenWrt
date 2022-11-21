@@ -115,9 +115,9 @@ jobs:
     - name: Generate release tag
       id: tag
       run: |
-        echo "{release_tag}={$(date +"%Y.%m.%d-%H%M")}" >> $GITHUB_OUTPUT
-        echo "::set-output name=status::success"
+        echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
         touch release.txt
+        echo "::set-output name=status::success"
         curl `echo ${{secrets.ACTIONS_NOTIFY_BARK}} | sed "s/Message/Compile+Success/"`
 
     - name: Upload firmware to release
